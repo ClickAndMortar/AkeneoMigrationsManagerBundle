@@ -1,0 +1,26 @@
+{
+    "name": "clickandmortar/akeneo-migrations-manager-bundle",
+    "description": "Akeneo Migrations manager bundle",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Simon CARRE",
+            "email": "simon.carre@clickandmortar.fr"
+        }
+    ],
+    "require": {
+        "akeneo/pim-community-dev": "2.3.*"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:ClickAndMortar/AkeneoMigrationsManagerBundle.git"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "ClickAndMortar\\AkeneoMigrationsManagerBundle\\": ""
+        }
+    }
+}
