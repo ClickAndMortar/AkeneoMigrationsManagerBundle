@@ -1,0 +1,12 @@
+parameters:
+    candm_migrations_manager.widget.last_migrations.class: ClickAndMortar\AkeneoMigrationsManagerBundle\Widget\LastMigrationsWidget
+
+services:
+    candm_migrations_manager.widget.last_migrations:
+        class: '%candm_migrations_manager.widget.last_migrations.class%'
+        arguments:
+            - '%doctrine_migrations_dir%'
+            - '@doctrine.orm.entity_manager'
+            - '@translator'
+        tags:
+        - { name: pim_dashboard.widget, position: 40 }

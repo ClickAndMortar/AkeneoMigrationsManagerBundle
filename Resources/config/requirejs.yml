@@ -1,0 +1,7 @@
+config:
+    paths:
+        # JS
+        clickandmortar/migrations-manager/last-migrations-widget: clickandmortarakeneomigrationsmanager/js/last-migrations-widget
+
+        # Templates
+        clickandmortar/migrations-manager/template/last-migrations-widget: clickandmortarakeneomigrationsmanager/templates/last-migrations-widget.html

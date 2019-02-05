@@ -1,0 +1,21 @@
+{% extends 'PimDashboardBundle:Widget:base.html.twig' %}
+
+{% set widgetTitle = 'candm_migrations_manager.widget.last_migrations.title'|trans %}
+
+{% set widgetContent %}
+    <table id="last-migrations-widget" class="AknGrid AknGrid--unclickable"></table>
+
+    <script type="text/javascript">
+        require(
+            ['jquery', 'pim/dashboard/widget-container', 'clickandmortar/migrations-manager/last-migrations-widget'],
+            function ($, widgetContainer, LastMigrationsWidget) {
+                'use strict';
+                $(function () {
+                    var options = {el: '#last-migrations-widget', alias: 'last_migrations'};
+                    var widget = widgetContainer.getWidget(options, LastMigrationsWidget);
+                    widget.render().delayedLoad();
+                });
+            }
+        );
+    </script>
+{% endset %}

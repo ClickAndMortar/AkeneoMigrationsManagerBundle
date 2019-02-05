@@ -1,0 +1,8 @@
+candm_migrations_manager:
+    widget:
+        last_migrations:
+            title: Dernières migrations
+            name: Nom
+            status: Statut
+            waiting: A appliquer
+            executed: En succès

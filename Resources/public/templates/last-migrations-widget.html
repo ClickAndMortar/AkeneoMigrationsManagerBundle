@@ -1,0 +1,32 @@
+<% if (!_.isEmpty(data)) { %>
+<thead>
+    <tr>
+        <th class="AknGrid-headerCell">
+            <%- __('candm_migrations_manager.widget.last_migrations.name') %>
+        </th>
+        <th class="AknGrid-headerCell">
+            <%- __('candm_migrations_manager.widget.last_migrations.status') %>
+        </th>
+    </tr>
+</thead>
+<tbody>
+    <% _.each(data, function (migration) { %>
+    <tr class="AknGrid-bodyRow">
+        <td class="AknGrid-bodyCell"> <%- migration.name %></td>
+        <td class="AknGrid-bodyCell">
+            <span class="AknBadge AknBadge--<%- migration.status.value %>">
+                <%- migration.status.label %>
+            </span>
+        </td>
+    </tr>
+    <% }); %>
+</tbody>
+<% } else if (options.contentLoaded) {%>
+    <tr>
+        <td class="AknGrid-bodyCell AknGrid-bodyCell--full">
+            <div class="AknMessageBox AknMessageBox--centered">
+                <%- __('candm_migrations_manager.widget.last_migrations.empty') %>
+            </div>
+        </td>
+    </tr>
+<% } %>

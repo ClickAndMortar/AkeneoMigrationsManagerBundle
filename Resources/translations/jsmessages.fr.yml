@@ -1,0 +1,6 @@
+candm_migrations_manager:
+    widget:
+        last_migrations:
+            name: Nom
+            status: Statut
+            empty: Aucune migration trouvée
