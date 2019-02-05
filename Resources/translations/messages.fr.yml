@@ -6,3 +6,10 @@ candm_migrations_manager:
             status: Statut
             waiting: A appliquer
             executed: En succès
+
+batch_jobs:
+    execute_migration:
+        execute:
+            label: Execution de la migration
+            errors:
+                no_migration_version: Aucune version de migration fournie.

@@ -1,0 +1,16 @@
+parameters:
+    candm_migrations_manager.connector_name.execute_migration: 'Click And Mortar Migrations manager'
+    candm_migrations_manager.job_name.execute_migration: 'execute_migration'
+    candm_migrations_manager.connector_type.migration: 'migration'
+
+services:
+    candm_migrations_manager.job.execute_migration:
+        class: '%pim_connector.job.simple_job.class%'
+        arguments:
+        - '%candm_migrations_manager.job_name.execute_migration%'
+        - '@event_dispatcher'
+        - '@akeneo_batch.job_repository'
+        -
+            - '@candm_migrations_manager.step.execute_migration.execute'
+        tags:
+        - { name: akeneo_batch.job, connector: '%candm_migrations_manager.connector_name.execute_migration%', type: '%candm_migrations_manager.connector_type.migration%' }

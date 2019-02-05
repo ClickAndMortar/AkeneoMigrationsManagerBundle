@@ -9,7 +9,7 @@ use Pim\Bundle\DashboardBundle\Widget\WidgetInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Widget to display / start last migrations available on project
+ * Widget to display / start last migrations availables on project
  *
  * @author  Simon CARRE <simon.carre@clickandmortar.fr>
  * @package ClickAndMortar\AkeneoMigrationsManagerBundle\Widget
@@ -57,9 +57,8 @@ class LastMigrationsWidget implements WidgetInterface
     /**
      * LastMigrationsWidget constructor.
      *
-     * @param string              $migrationsDir
-     * @param EntityManager       $entityManager
-     * @param TranslatorInterface $translator
+     * @param string        $migrationDir
+     * @param EntityManager $entityManager
      */
     public function __construct($migrationsDir, EntityManager $entityManager, TranslatorInterface $translator)
     {

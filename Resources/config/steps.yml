@@ -1,0 +1,11 @@
+parameters:
+    candm_migrations_manager.step.execute_migration.execute.class: ClickAndMortar\AkeneoMigrationsManagerBundle\Step\ExecuteMigrationStep
+
+services:
+    candm_migrations_manager.step.execute_migration.execute:
+        class: '%candm_migrations_manager.step.execute_migration.execute.class%'
+        arguments:
+        - 'execute'
+        - '@event_dispatcher'
+        - '@akeneo_batch.job_repository'
+        - '@kernel'

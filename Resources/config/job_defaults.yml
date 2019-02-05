@@ -1,0 +1,11 @@
+parameters:
+    candm_migrations_manager.job.job_parameters.default_values_provider.execute_migration.class: ClickAndMortar\AkeneoMigrationsManagerBundle\Job\JobParameters\DefaultValuesProvider\ExecuteMigration
+
+services:
+    candm_migrations_manager.job.job_parameters.default_values_provider.execute_migration:
+        class: '%candm_migrations_manager.job.job_parameters.default_values_provider.execute_migration.class%'
+        arguments:
+            -
+                - '%candm_migrations_manager.job_name.execute_migration%'
+        tags:
+            - { name: akeneo_batch.job.job_parameters.default_values_provider }
