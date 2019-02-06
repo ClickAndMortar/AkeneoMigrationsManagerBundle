@@ -6,6 +6,7 @@ candm_migrations_manager:
             status: Statut
             waiting: A appliquer
             executed: En succès
+            error: Erreur
 
 batch_jobs:
     execute_migration:

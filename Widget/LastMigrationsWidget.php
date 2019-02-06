@@ -2,6 +2,7 @@
 
 namespace ClickAndMortar\AkeneoMigrationsManagerBundle\Widget;
 
+use Akeneo\Component\Batch\Job\BatchStatus;
 use Akeneo\Component\Batch\Model\JobExecution;
 use Doctrine\DBAL\Migrations\Finder\GlobFinder;
 use Doctrine\ORM\EntityManager;
@@ -38,6 +39,13 @@ class LastMigrationsWidget implements WidgetInterface
      * @var string
      */
     const STATUS_SUCCESS = 'success';
+
+    /**
+     * Failed status
+     *
+     * @var string
+     */
+    const STATUS_FAILED = 'important';
 
     /**
      * Migrations directory
@@ -122,20 +130,24 @@ class LastMigrationsWidget implements WidgetInterface
                 break;
             }
 
-            // Check migration status
-            $status = $statuses[self::STATUS_WAITING];
-            foreach ($loadedMigrations as $loadedMigration) {
-                if ($rawMigrationName === $loadedMigration['version']) {
-                    $status = $statuses[self::STATUS_SUCCESS];
-                    break;
-                }
-            }
-
             // Get execution id if possible
             $executionId = null;
             $execution   = $this->getLastExecutionByMigrationVersion($rawMigrationName);
             if ($execution !== null) {
                 $executionId = $execution->getId();
+            }
+
+            // Check migration status
+            $status = $statuses[self::STATUS_WAITING];
+            foreach ($loadedMigrations as $loadedMigration) {
+                if ($rawMigrationName === $loadedMigration['version']) {
+                    if ($execution === null || $execution->getStatus() == new BatchStatus(BatchStatus::COMPLETED)) {
+                        $status = $statuses[self::STATUS_SUCCESS];
+                    } else {
+                        $status = $statuses[self::STATUS_FAILED];
+                    }
+                    break;
+                }
             }
 
             $migrations[] = [
@@ -165,6 +177,10 @@ class LastMigrationsWidget implements WidgetInterface
             self::STATUS_SUCCESS => [
                 'value' => self::STATUS_SUCCESS,
                 'label' => $this->translator->trans('candm_migrations_manager.widget.last_migrations.executed'),
+            ],
+            self::STATUS_FAILED => [
+                'value' => self::STATUS_FAILED,
+                'label' => $this->translator->trans('candm_migrations_manager.widget.last_migrations.error'),
             ],
         ];
     }
