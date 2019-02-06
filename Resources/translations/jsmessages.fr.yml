@@ -2,6 +2,7 @@ candm_migrations_manager:
     widget:
         last_migrations:
             name: Nom
+            code: Code
             status: Statut
             empty: Aucune migration trouvée
             details: Détails

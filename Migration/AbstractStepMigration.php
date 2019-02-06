@@ -51,4 +51,11 @@ abstract class AbstractStepMigration extends AbstractMigration
     {
         $this->throwIrreversibleMigrationException();
     }
+
+    /**
+     * Get migration label used in dashboard widget
+     *
+     * @return string
+     */
+    abstract public static function getLabel();
 }

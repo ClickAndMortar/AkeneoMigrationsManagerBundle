@@ -33,8 +33,6 @@ php bin/console akeneo:batch:create-job internal execute_migration migration exe
 php bin/console doctrine:migrations:generate
 ```
 
-* You can rename your migration to use release version and have better name in migrations widget view: `Version1_0_1.php`
-
 * Create your migration by extending `AbstractStepMigration` to use steps methods. Example:
 
 ```
@@ -46,13 +44,20 @@ use ClickAndMortar\AkeneoMigrationsManagerBundle\Migration\AbstractStepMigration
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Class Version1_0_1
+ * Class Version20190121174114
  *
  * @author  Simon CARRE <simon.carre@clickandmortar.fr>
  * @package Pim\Upgrade\Schema
  */
-class Version1_0_1 extends AbstractStepMigration
+class Version20190121174114 extends AbstractStepMigration
 {
+    /**
+     * Migration label
+     *
+     * @var string
+     */
+    const MIGRATION_LABEL = 'Update to 1.0.1';
+
     /**
      * @param Schema $schema
      */
@@ -66,6 +71,16 @@ class Version1_0_1 extends AbstractStepMigration
         $this->createNewStep('Start the last step');
         
         // Process here
+    }
+
+    /**
+     * Get migration label used in dashboard widget
+     *
+     * @return string
+     */
+    public static function getLabel()
+    {
+        return self::MIGRATION_LABEL;
     }
 }
 

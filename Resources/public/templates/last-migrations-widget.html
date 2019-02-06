@@ -5,6 +5,9 @@
             <%- __('candm_migrations_manager.widget.last_migrations.name') %>
         </th>
         <th class="AknGrid-headerCell">
+            <%- __('candm_migrations_manager.widget.last_migrations.code') %>
+        </th>
+        <th class="AknGrid-headerCell">
             <%- __('candm_migrations_manager.widget.last_migrations.status') %>
         </th>
         <th class="AknGrid-headerCell">
@@ -15,6 +18,7 @@
     <% _.each(data, function (migration) { %>
     <tr class="AknGrid-bodyRow">
         <td class="AknGrid-bodyCell"> <%- migration.name %></td>
+        <td class="AknGrid-bodyCell"> <%- migration.code %></td>
         <td class="AknGrid-bodyCell">
             <span class="AknBadge AknBadge--<%- migration.status.value %>">
                 <%- migration.status.label %>

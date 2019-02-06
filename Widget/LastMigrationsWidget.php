@@ -162,7 +162,8 @@ class LastMigrationsWidget implements WidgetInterface
             }
 
             $migrations[] = [
-                'name'         => $rawMigrationName,
+                'name'         => $this->getMigrationLabelByVersion($rawMigrationName),
+                'code'         => $rawMigrationName,
                 'class'        => $rawMigration,
                 'status'       => $status,
                 'execution_id' => $executionId,
@@ -231,5 +232,25 @@ class LastMigrationsWidget implements WidgetInterface
         }
 
         return null;
+    }
+
+    /**
+     * Get migration label by $version
+     *
+     * @param string $version
+     *
+     * @return string
+     */
+    protected function getMigrationLabelByVersion($version)
+    {
+        $migrationClassname = sprintf('Pim\Upgrade\Schema\Version%s', $version);
+        if (
+            class_exists($migrationClassname)
+            && method_exists($migrationClassname, 'getLabel')
+        ) {
+            return $migrationClassname::getLabel();
+        }
+
+        return $version;
     }
 }
