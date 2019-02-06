@@ -8,5 +8,6 @@ services:
             - '%doctrine_migrations_dir%'
             - '@doctrine.orm.entity_manager'
             - '@translator'
+            - '@pim_enrich.repository.job_execution'
         tags:
         - { name: pim_dashboard.widget, position: 40 }

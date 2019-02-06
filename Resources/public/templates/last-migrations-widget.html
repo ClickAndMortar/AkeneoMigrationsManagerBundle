@@ -7,6 +7,8 @@
         <th class="AknGrid-headerCell">
             <%- __('candm_migrations_manager.widget.last_migrations.status') %>
         </th>
+        <th class="AknGrid-headerCell">
+        </th>
     </tr>
 </thead>
 <tbody>
@@ -18,15 +20,23 @@
                 <%- migration.status.label %>
             </span>
         </td>
+        <td class="AknGrid-bodyCell AknGrid-bodyCell--right">
+            <% if (migration.execution_id) { %>
+            <span class="AknButton AknButton--small AknButton--grey show-details-btn"
+                  data-id="<%- migration.execution_id %>">
+                <%- __('candm_migrations_manager.widget.last_migrations.details') %>
+            </span>
+            <% } %>
+        </td>
     </tr>
     <% }); %>
 </tbody>
 <% } else if (options.contentLoaded) {%>
-    <tr>
-        <td class="AknGrid-bodyCell AknGrid-bodyCell--full">
-            <div class="AknMessageBox AknMessageBox--centered">
-                <%- __('candm_migrations_manager.widget.last_migrations.empty') %>
-            </div>
-        </td>
-    </tr>
+<tr>
+    <td class="AknGrid-bodyCell AknGrid-bodyCell--full">
+        <div class="AknMessageBox AknMessageBox--centered">
+            <%- __('candm_migrations_manager.widget.last_migrations.empty') %>
+        </div>
+    </td>
+</tr>
 <% } %>

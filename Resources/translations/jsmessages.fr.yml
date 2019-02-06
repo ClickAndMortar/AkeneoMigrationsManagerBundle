@@ -4,3 +4,4 @@ candm_migrations_manager:
             name: Nom
             status: Statut
             empty: Aucune migration trouvée
+            details: Détails

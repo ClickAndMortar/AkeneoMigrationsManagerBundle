@@ -2,10 +2,12 @@
 
 namespace ClickAndMortar\AkeneoMigrationsManagerBundle\Widget;
 
+use Akeneo\Component\Batch\Model\JobExecution;
 use Doctrine\DBAL\Migrations\Finder\GlobFinder;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Pim\Bundle\DashboardBundle\Widget\WidgetInterface;
+use Pim\Bundle\EnrichBundle\Doctrine\ORM\Repository\JobExecutionRepository;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -55,16 +57,24 @@ class LastMigrationsWidget implements WidgetInterface
     protected $translator;
 
     /**
+     * @var JobExecutionRepository
+     */
+    protected $jobExecutionRepository;
+
+    /**
      * LastMigrationsWidget constructor.
      *
-     * @param string        $migrationDir
-     * @param EntityManager $entityManager
+     * @param string                 $migrationDir
+     * @param EntityManager          $entityManager
+     * @param TranslatorInterface    $translator
+     * @param JobExecutionRepository $jobExecutionRepository
      */
-    public function __construct($migrationsDir, EntityManager $entityManager, TranslatorInterface $translator)
+    public function __construct($migrationsDir, EntityManager $entityManager, TranslatorInterface $translator, JobExecutionRepository $jobExecutionRepository)
     {
-        $this->migrationsDir = $migrationsDir;
-        $this->entityManager = $entityManager;
-        $this->translator    = $translator;
+        $this->migrationsDir          = $migrationsDir;
+        $this->entityManager          = $entityManager;
+        $this->translator             = $translator;
+        $this->jobExecutionRepository = $jobExecutionRepository;
     }
 
     /**
@@ -121,10 +131,18 @@ class LastMigrationsWidget implements WidgetInterface
                 }
             }
 
+            // Get execution id if possible
+            $executionId = null;
+            $execution   = $this->getLastExecutionByMigrationVersion($rawMigrationName);
+            if ($execution !== null) {
+                $executionId = $execution->getId();
+            }
+
             $migrations[] = [
-                'name'   => $rawMigrationName,
-                'class'  => $rawMigration,
-                'status' => $status,
+                'name'         => $rawMigrationName,
+                'class'        => $rawMigration,
+                'status'       => $status,
+                'execution_id' => $executionId,
             ];
             $limitIndex++;
         }
@@ -149,5 +167,39 @@ class LastMigrationsWidget implements WidgetInterface
                 'label' => $this->translator->trans('candm_migrations_manager.widget.last_migrations.executed'),
             ],
         ];
+    }
+
+    /**
+     * Get last job execution by $migrationVersion
+     *
+     * @param string $migrationVersion
+     *
+     * @return JobExecution
+     */
+    protected function getLastExecutionByMigrationVersion($migrationVersion)
+    {
+        /** @var JobExecution[] $executions */
+        $executions = $this->jobExecutionRepository->createQueryBuilder('e')
+                                                   ->innerJoin('e.jobInstance', 'j')
+                                                   ->where('j.type = :type')
+                                                   ->orderBy('e.endTime', 'DESC')
+                                                   ->setParameters([
+                                                       'type' => 'migration',
+                                                   ])
+                                                   ->getQuery()
+                                                   ->getResult();
+
+        // Check for version in execution parameters
+        foreach ($executions as $execution) {
+            $executionParameters = $execution->getRawParameters();
+            if (
+                isset($executionParameters['migrationVersion'])
+                && $executionParameters['migrationVersion'] == $migrationVersion
+            ) {
+                return $execution;
+            }
+        }
+
+        return null;
     }
 }
