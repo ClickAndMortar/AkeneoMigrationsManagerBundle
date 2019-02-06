@@ -23,8 +23,8 @@ class ClickAndMortarAkeneoMigrationsManagerExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('widgets.yml');
         $loader->load('jobs.yml');
-        $loader->load('steps.yml');
         $loader->load('job_defaults.yml');
         $loader->load('job_constraints.yml');
+        $loader->load('normalizers.yml');
     }
 }

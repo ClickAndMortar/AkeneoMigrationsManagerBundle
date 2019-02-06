@@ -10,7 +10,7 @@ candm_migrations_manager:
 
 batch_jobs:
     execute_migration:
-        execute:
-            label: Execution de la migration
+        check_migration_version:
+            label: Vérification de la version de la migration
             errors:
                 no_migration_version: Aucune version de migration fournie.

@@ -178,7 +178,7 @@ class LastMigrationsWidget implements WidgetInterface
                 'value' => self::STATUS_SUCCESS,
                 'label' => $this->translator->trans('candm_migrations_manager.widget.last_migrations.executed'),
             ],
-            self::STATUS_FAILED => [
+            self::STATUS_FAILED  => [
                 'value' => self::STATUS_FAILED,
                 'label' => $this->translator->trans('candm_migrations_manager.widget.last_migrations.error'),
             ],
@@ -198,10 +198,8 @@ class LastMigrationsWidget implements WidgetInterface
         $executions = $this->jobExecutionRepository->createQueryBuilder('e')
                                                    ->innerJoin('e.jobInstance', 'j')
                                                    ->where('j.type = :type')
-                                                   ->orderBy('e.endTime', 'DESC')
-                                                   ->setParameters([
-                                                       'type' => 'migration',
-                                                   ])
+                                                   ->orderBy('e.createTime', 'DESC')
+                                                   ->setParameter('type', 'migration')
                                                    ->getQuery()
                                                    ->getResult();
 

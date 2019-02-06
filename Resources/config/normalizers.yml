@@ -1,0 +1,2 @@
+parameters:
+    pim_import_export.normalizer.step_execution.class: ClickAndMortar\AkeneoMigrationsManagerBundle\Normalizer\StepExecutionNormalizer
