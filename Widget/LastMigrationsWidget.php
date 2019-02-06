@@ -48,6 +48,13 @@ class LastMigrationsWidget implements WidgetInterface
     const STATUS_FAILED = 'important';
 
     /**
+     * In progress status
+     *
+     * @var string
+     */
+    const STATUS_IN_PROGRESS = 'action';
+
+    /**
      * Migrations directory
      *
      * @var string
@@ -68,6 +75,11 @@ class LastMigrationsWidget implements WidgetInterface
      * @var JobExecutionRepository
      */
     protected $jobExecutionRepository;
+
+    /**
+     * @var JobExecution[]
+     */
+    protected $loadedExecutions;
 
     /**
      * LastMigrationsWidget constructor.
@@ -117,10 +129,6 @@ class LastMigrationsWidget implements WidgetInterface
         $migrations = [];
         $statuses   = $this->getStatuses();
 
-        // Get loaded migrations from database
-        $connection       = $this->entityManager->getConnection();
-        $loadedMigrations = $connection->executeQuery('SELECT version FROM migration_versions')->fetchAll();
-
         // Get migrations from directory
         $globFinder    = new GlobFinder();
         $rawMigrations = $globFinder->findMigrations($this->migrationsDir);
@@ -137,16 +145,19 @@ class LastMigrationsWidget implements WidgetInterface
                 $executionId = $execution->getId();
             }
 
-            // Check migration status
+            // Get status from execution
             $status = $statuses[self::STATUS_WAITING];
-            foreach ($loadedMigrations as $loadedMigration) {
-                if ($rawMigrationName === $loadedMigration['version']) {
-                    if ($execution === null || $execution->getStatus() == new BatchStatus(BatchStatus::COMPLETED)) {
+            if ($execution !== null) {
+                switch ($execution->getStatus()) {
+                    case new BatchStatus(BatchStatus::COMPLETED):
                         $status = $statuses[self::STATUS_SUCCESS];
-                    } else {
+                        break;
+                    case new BatchStatus(BatchStatus::FAILED):
                         $status = $statuses[self::STATUS_FAILED];
-                    }
-                    break;
+                        break;
+                    default:
+                        $status = $statuses[self::STATUS_IN_PROGRESS];
+                        break;
                 }
             }
 
@@ -170,17 +181,21 @@ class LastMigrationsWidget implements WidgetInterface
     protected function getStatuses()
     {
         return [
-            self::STATUS_WAITING => [
+            self::STATUS_WAITING     => [
                 'value' => self::STATUS_WAITING,
                 'label' => $this->translator->trans('candm_migrations_manager.widget.last_migrations.waiting'),
             ],
-            self::STATUS_SUCCESS => [
+            self::STATUS_SUCCESS     => [
                 'value' => self::STATUS_SUCCESS,
                 'label' => $this->translator->trans('candm_migrations_manager.widget.last_migrations.executed'),
             ],
-            self::STATUS_FAILED  => [
+            self::STATUS_FAILED      => [
                 'value' => self::STATUS_FAILED,
                 'label' => $this->translator->trans('candm_migrations_manager.widget.last_migrations.error'),
+            ],
+            self::STATUS_IN_PROGRESS => [
+                'value' => self::STATUS_IN_PROGRESS,
+                'label' => $this->translator->trans('candm_migrations_manager.widget.last_migrations.in_progress'),
             ],
         ];
     }
@@ -194,23 +209,24 @@ class LastMigrationsWidget implements WidgetInterface
      */
     protected function getLastExecutionByMigrationVersion($migrationVersion)
     {
-        /** @var JobExecution[] $executions */
-        $executions = $this->jobExecutionRepository->createQueryBuilder('e')
-                                                   ->innerJoin('e.jobInstance', 'j')
-                                                   ->where('j.type = :type')
-                                                   ->orderBy('e.createTime', 'DESC')
-                                                   ->setParameter('type', 'migration')
-                                                   ->getQuery()
-                                                   ->getResult();
+        if (empty($this->loadedExecutions)) {
+            $this->loadedExecutions = $this->jobExecutionRepository->createQueryBuilder('e')
+                                                                   ->innerJoin('e.jobInstance', 'j')
+                                                                   ->where('j.type = :type')
+                                                                   ->orderBy('e.createTime', 'DESC')
+                                                                   ->setParameter('type', 'migration')
+                                                                   ->getQuery()
+                                                                   ->getResult();
+        }
 
         // Check for version in execution parameters
-        foreach ($executions as $execution) {
-            $executionParameters = $execution->getRawParameters();
+        foreach ($this->loadedExecutions as $loadedExecution) {
+            $executionParameters = $loadedExecution->getRawParameters();
             if (
                 isset($executionParameters['migrationVersion'])
                 && $executionParameters['migrationVersion'] == $migrationVersion
             ) {
-                return $execution;
+                return $loadedExecution;
             }
         }
 

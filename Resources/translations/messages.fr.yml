@@ -7,6 +7,7 @@ candm_migrations_manager:
             waiting: A appliquer
             executed: En succès
             error: Erreur
+            in_progress: En cours
 
 batch_jobs:
     execute_migration:
