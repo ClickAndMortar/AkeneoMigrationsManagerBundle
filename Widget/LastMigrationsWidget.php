@@ -20,7 +20,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 class LastMigrationsWidget implements WidgetInterface
 {
     /**
-     * Limit migrations display on dashboard
+     * Limit executed migrations display on dashboard
      *
      * @var int
      */
@@ -126,23 +126,24 @@ class LastMigrationsWidget implements WidgetInterface
      */
     public function getData()
     {
-        $migrations = [];
-        $statuses   = $this->getStatuses();
+        $executedMigrations    = [];
+        $notExecutedMigrations = [];
+        $statuses              = $this->getStatuses();
 
         // Get migrations from directory
         $globFinder    = new GlobFinder();
         $rawMigrations = $globFinder->findMigrations($this->migrationsDir);
         $limitIndex    = 0;
         foreach ($rawMigrations as $rawMigrationName => $rawMigration) {
-            if ($limitIndex >= self::MIGRATIONS_LIMIT) {
-                break;
-            }
-
-            // Get execution id if possible
-            $executionId = null;
-            $execution   = $this->getLastExecutionByMigrationVersion($rawMigrationName);
+            // Get execution data if possible
+            $executionData = [];
+            $execution     = $this->getLastExecutionByMigrationVersion($rawMigrationName);
             if ($execution !== null) {
-                $executionId = $execution->getId();
+                $executionData = [
+                    'id'          => $execution->getId(),
+                    'create_time' => $execution->getCreateTime() !== null ? $execution->getCreateTime()
+                                                                                      ->getTimestamp() : null,
+                ];
             }
 
             // Get status from execution
@@ -161,17 +162,21 @@ class LastMigrationsWidget implements WidgetInterface
                 }
             }
 
-            $migrations[] = [
-                'name'         => $this->getMigrationLabelByVersion($rawMigrationName),
-                'code'         => $rawMigrationName,
-                'class'        => $rawMigration,
-                'status'       => $status,
-                'execution_id' => $executionId,
-            ];
+            if (empty($executionData)) {
+                $notExecutedMigrations[] = $this->getSerializedMigration($rawMigrationName, $status, $executionData);
+            } else {
+                $executedMigrations[] = $this->getSerializedMigration($rawMigrationName, $status, $executionData);
+            }
             $limitIndex++;
         }
 
-        return array_slice($migrations, 0, self::MIGRATIONS_LIMIT);
+        // Sort executed migrations by creation time
+        usort($executedMigrations, function ($a, $b) {
+            return $b['execution']['create_time'] - $a['execution']['create_time'];
+        });
+        $migrations = array_merge($notExecutedMigrations, array_slice($executedMigrations, 0, self::MIGRATIONS_LIMIT));
+
+        return $migrations;
     }
 
     /**
@@ -252,5 +257,24 @@ class LastMigrationsWidget implements WidgetInterface
         }
 
         return $version;
+    }
+
+    /**
+     * Get serialized migration data
+     *
+     * @param string $rawMigrationName
+     * @param array  $status
+     * @param array  $executionData
+     *
+     * @return array
+     */
+    protected function getSerializedMigration($rawMigrationName, $status, $executionData)
+    {
+        return [
+            'name'      => $this->getMigrationLabelByVersion($rawMigrationName),
+            'code'      => $rawMigrationName,
+            'status'    => $status,
+            'execution' => $executionData,
+        ];
     }
 }

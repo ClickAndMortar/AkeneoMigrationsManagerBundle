@@ -25,9 +25,9 @@
             </span>
         </td>
         <td class="AknGrid-bodyCell AknGrid-bodyCell--right">
-            <% if (migration.execution_id) { %>
+            <% if (!_.isEmpty(migration.execution)) { %>
             <span class="AknButton AknButton--small AknButton--grey show-details-btn"
-                  data-id="<%- migration.execution_id %>">
+                  data-id="<%- migration.execution.id %>">
                 <%- __('candm_migrations_manager.widget.last_migrations.details') %>
             </span>
             <% } %>
