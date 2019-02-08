@@ -1,25 +1,55 @@
-# Akeneo Migrations Manager Bundle - Click And Mortar
+# Akeneo Migrations Manager Bundle - C&M
 
-This bundle allows to manage migrations on dashboard on your Akeneo project.
+> This bundle allows to manage migrations on dashboard on your Akeneo project.
+
+This bundle provides a widget to list available migrations and a custom job to follow migrations execution.
 
 Made by :heart: by C&M
 
+## Requirements
+
+|                                     | Version |
+| ----------------------------------- | ------- |
+| PHP                                 | `>=7.1` |
+| [Akeneo](https://www.akeneo.com/)   | `>=2.3` |
+
 ## Installation
 
-Add package with composer:
-```bash
-composer require clickandmortar/akeneo-migrations-manager-bundle "^1.0"
+### Download the Bundle
+
+```console
+$ composer require clickandmortar/akeneo-migrations-manager-bundle
 ```
 
-Add bundle in your **`app/AppKernel.php`** file:
+### Enable the Bundle
+
+Enable the bundle by adding it to the list of registered bundles
+in the `app/AppKernel.php` file of your project:
+
 ```php
-$bundles = array(
-            ...
+<?php
+// app/AppKernel.php
+
+// ...
+class AppKernel extends Kernel
+{
+    public function registerBundles()
+    {
+        $bundles = [
+            // ...
             new ClickAndMortar\AkeneoMigrationsManagerBundle\ClickAndMortarAkeneoMigrationsManagerBundle(),
-        );
+        ];
+
+        // ...
+    }
+
+    // ...
+}
 ```
 
-Create job used to manage migrations:
+## Configuration
+
+### Create custom job to manage migrations
 
 ```
 php bin/console akeneo:batch:create-job internal execute_migration migration execute_migration_by_version '{"migrationVersion":null}' 'Execute migration by version'
@@ -27,13 +57,15 @@ php bin/console akeneo:batch:create-job internal execute_migration migration exe
 
 ## Usage
 
-* Create a new classic migration with command:
+### Create migration
+
+Create a new migration with the classic command:
 
 ```
 php bin/console doctrine:migrations:generate
 ```
 
-* Create your migration by extending `AbstractStepMigration` to use steps methods. Example:
+Extends `AbstractStepMigration` to use steps methods. Example:
 
 ```
 <?php
@@ -86,11 +118,12 @@ class Version20190121174114 extends AbstractStepMigration
 
 ```
 
-* Start migration with created job to enable tracking in widget view:
+## Start migration
+
+You can start migration with custom created job to enable tracking in widget view:
 
 ```
 php bin/console akeneo:batch:job -c '{"migrationVersion":"<my_version>"}' execute_migration_by_version
 ```
 
-
-
+![](./docs/img/dashboard_widget.png)
