@@ -1,0 +1,5 @@
+services:
+  candm_migrations_manager.helper.entity:
+    class: ClickAndMortar\AkeneoMigrationsManagerBundle\Helper\EntityHelper
+    arguments:
+    - '@service_container'
