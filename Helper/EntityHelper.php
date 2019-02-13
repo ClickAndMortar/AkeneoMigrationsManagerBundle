@@ -2,6 +2,9 @@
 
 namespace ClickAndMortar\AkeneoMigrationsManagerBundle\Helper;
 
+use Akeneo\Bundle\BatchBundle\Job\JobInstanceRepository;
+use Akeneo\Component\Batch\Model\JobInstance;
+use Doctrine\ORM\EntityManager;
 use Pim\Bundle\ApiBundle\Doctrine\ORM\Repository\AttributeRepository;
 use Pim\Bundle\CatalogBundle\Entity\Attribute;
 use Pim\Bundle\CatalogBundle\Entity\AttributeOption;
@@ -123,5 +126,52 @@ class EntityHelper
         $entityManager = $this->container->get('doctrine.orm.entity_manager');
         $entityManager->persist($family);
         $entityManager->flush();
+    }
+
+    /**
+     * Get parameters for given job $code
+     *
+     * @param string $code
+     *
+     * @return array
+     */
+    public function getParametersByJob(string $code)
+    {
+        /** @var JobInstanceRepository $jobInstanceRepository */
+        $jobInstanceRepository = $this->container->get('akeneo_batch.job.job_instance_repository');
+        /** @var JobInstance $jobInstance */
+        $jobInstance = $jobInstanceRepository->findOneByIdentifier($code);
+        if ($jobInstance === null) {
+            return [];
+        }
+
+        return $jobInstance->getRawParameters();
+    }
+
+    /**
+     * Set parameters on given job $code
+     *
+     * @param string $code
+     * @param array  $parameters
+     *
+     * @return bool
+     */
+    public function setParametersByJob(string $code, array $parameters)
+    {
+        /** @var JobInstanceRepository $jobInstanceRepository */
+        $jobInstanceRepository = $this->container->get('akeneo_batch.job.job_instance_repository');
+        /** @var JobInstance $jobInstance */
+        $jobInstance = $jobInstanceRepository->findOneByIdentifier($code);
+        if ($jobInstance === null) {
+            return false;
+        }
+
+        $jobInstance->setRawParameters($parameters);
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->container->get('doctrine.orm.entity_manager');
+        $entityManager->persist($jobInstance);
+        $entityManager->flush();
+
+        return true;
     }
 }
