@@ -5,6 +5,8 @@ namespace ClickAndMortar\AkeneoMigrationsManagerBundle\Migration;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use ClickAndMortar\AkeneoMigrationsManagerBundle\Job\MigrationJob;
 use Doctrine\DBAL\Schema\Schema;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Abstract step migration
@@ -12,8 +14,13 @@ use Doctrine\DBAL\Schema\Schema;
  * @author  Simon CARRE <simon.carre@clickandmortar.fr>
  * @package ClickAndMortar\AkeneoMigrationsManagerBundle\Migration
  */
-abstract class AbstractStepMigration extends AbstractMigration
+abstract class AbstractStepMigration extends AbstractMigration implements ContainerAwareInterface
 {
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
+
     /**
      * Create new step
      *
@@ -50,6 +57,14 @@ abstract class AbstractStepMigration extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->throwIrreversibleMigrationException();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
     }
 
     /**
