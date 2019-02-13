@@ -174,4 +174,46 @@ class EntityHelper
 
         return true;
     }
+
+    /**
+     * Get mapping for given job $code (mapping is a custom job parameter added by AdvancedCsvConnectorBundle)
+     *
+     * @param string $code
+     *
+     * @return array
+     *
+     * @see https://github.com/ClickAndMortar/AdvancedCsvConnectorBundle
+     */
+    public function getMappingByJob(string $code)
+    {
+        $parameters = $this->getParametersByJob($code);
+        if (empty($parameters) || !array_key_exists('mapping', $parameters)) {
+            return [];
+        }
+
+        return json_decode($parameters['mapping'], true);
+    }
+
+    /**
+     * Set mapping for given job $code (mapping is a custom job parameter added by AdvancedCsvConnectorBundle)
+     *
+     * @param string $code
+     * @param array  $mapping
+     *
+     * @return bool
+     *
+     * @see https://github.com/ClickAndMortar/AdvancedCsvConnectorBundle
+     */
+    public function setMappingByJob(string $code, array $mapping)
+    {
+        $parameters = $this->getParametersByJob($code);
+        if (empty($parameters) || !array_key_exists('mapping', $parameters)) {
+            return false;
+        }
+
+        $parameters['mapping'] = json_encode($mapping, JSON_PRETTY_PRINT);
+        $this->setParametersByJob($code, $parameters);
+
+        return true;
+    }
 }
