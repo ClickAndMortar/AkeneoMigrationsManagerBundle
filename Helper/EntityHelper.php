@@ -32,10 +32,11 @@ class EntityHelper
      * @param string $group
      * @param bool   $localizable
      * @param bool   $scopable
+     * @param array  $parameters
      *
      * @return Attribute
      */
-    public function createAttribute(string $code, string $type, string $group, bool $localizable = false, bool $scopable = false)
+    public function createAttribute(string $code, string $type, string $group, bool $localizable = false, bool $scopable = false, array $parameters = [])
     {
         /** @var AttributeRepository $attributeRepository */
         $attributeRepository = $this->container->get('pim_api.repository.attribute');
@@ -50,6 +51,7 @@ class EntityHelper
             'scopable'    => $scopable,
             'group'       => $group,
         ];
+        $attributeData = array_merge($attributeData, $parameters);
 
         if (null === $attribute) {
             $attribute = $this->container->get('pim_catalog.factory.attribute')->create();
@@ -113,7 +115,7 @@ class EntityHelper
 
     /**
      * @param Attribute $attribute
-     * @param Family $family
+     * @param Family    $family
      */
     public function addAttributeToFamily(Attribute $attribute, Family $family)
     {
