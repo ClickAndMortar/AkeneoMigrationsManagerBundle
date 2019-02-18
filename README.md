@@ -4,7 +4,7 @@
 
 This bundle provides a widget to list available migrations and a custom job to follow migrations execution.
 
-Made by :heart: by C&M
+Made with :blue_heart: by C&M
 
 ## Requirements
 
