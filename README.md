@@ -67,7 +67,7 @@ php bin/console doctrine:migrations:generate
 
 Extends `AbstractStepMigration` to use steps methods. Example:
 
-```
+```php
 <?php
 
 namespace Pim\Upgrade\Schema;
