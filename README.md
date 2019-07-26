@@ -6,6 +6,13 @@ This bundle provides a widget to list available migrations and a custom job to f
 
 Made with :blue_heart: by C&M
 
+## Versions
+
+| **Bundle version**  | **Akeneo version** |
+| ------------- | ------------- |
+| v1.1.*  | v3.1.*  |
+| v1.0.*  | v2.3.*  |
+
 ## Requirements
 
 |                                     | Version |
