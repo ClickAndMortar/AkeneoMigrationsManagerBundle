@@ -2,13 +2,13 @@
 
 namespace ClickAndMortar\AkeneoMigrationsManagerBundle\Helper;
 
-use Akeneo\Bundle\BatchBundle\Job\JobInstanceRepository;
-use Akeneo\Component\Batch\Model\JobInstance;
+use Akeneo\Tool\Bundle\BatchBundle\Job\JobInstanceRepository;
+use Akeneo\Tool\Component\Batch\Model\JobInstance;
 use Doctrine\ORM\EntityManager;
-use Pim\Bundle\ApiBundle\Doctrine\ORM\Repository\AttributeRepository;
-use Pim\Bundle\CatalogBundle\Entity\Attribute;
-use Pim\Bundle\CatalogBundle\Entity\AttributeOption;
-use Pim\Bundle\CatalogBundle\Entity\Family;
+use Akeneo\Tool\Bundle\ApiBundle\Doctrine\ORM\Repository\AttributeRepository;
+use Akeneo\Pim\Structure\Component\Model\Attribute;
+use Akeneo\Pim\Structure\Component\Model\AttributeOption;
+use Akeneo\Pim\Structure\Component\Model\Family;
 use Psr\Container\ContainerInterface;
 
 /**

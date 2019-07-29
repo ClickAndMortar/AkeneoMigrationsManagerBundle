@@ -6,3 +6,7 @@ candm_migrations_manager:
             status: Statut
             empty: Aucune migration trouvée
             details: Détails
+
+batch_jobs:
+    default_steps:
+        check_migration_version: Vérification de la version de la migration

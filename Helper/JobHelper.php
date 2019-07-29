@@ -2,9 +2,9 @@
 
 namespace ClickAndMortar\AkeneoMigrationsManagerBundle\Helper;
 
-use Akeneo\Bundle\BatchBundle\Job\JobInstanceRepository;
-use Akeneo\Component\Console\CommandLauncher;
-use Akeneo\Component\Console\CommandResult;
+use Akeneo\Tool\Bundle\BatchBundle\Job\JobInstanceRepository;
+use Akeneo\Tool\Component\Console\CommandLauncher;
+use Akeneo\Tool\Component\Console\CommandResult;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;

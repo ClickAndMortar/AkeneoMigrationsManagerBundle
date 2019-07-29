@@ -2,8 +2,8 @@
 
 namespace ClickAndMortar\AkeneoMigrationsManagerBundle\Normalizer;
 
-use Akeneo\Component\Batch\Model\StepExecution;
-use Pim\Bundle\ImportExportBundle\Normalizer\StepExecutionNormalizer as BaseNormalizerInterface;
+use Akeneo\Tool\Component\Batch\Model\StepExecution;
+use Akeneo\Platform\Bundle\ImportExportBundle\Normalizer\StepExecutionNormalizer as BaseNormalizerInterface;
 
 /**
  * Normalizer of StepExecution instance

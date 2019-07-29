@@ -2,13 +2,13 @@
 
 namespace ClickAndMortar\AkeneoMigrationsManagerBundle\Widget;
 
-use Akeneo\Component\Batch\Job\BatchStatus;
-use Akeneo\Component\Batch\Model\JobExecution;
+use Akeneo\Tool\Component\Batch\Job\BatchStatus;
+use Akeneo\Tool\Component\Batch\Model\JobExecution;
 use Doctrine\DBAL\Migrations\Finder\GlobFinder;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\ResultSetMapping;
-use Pim\Bundle\DashboardBundle\Widget\WidgetInterface;
-use Pim\Bundle\EnrichBundle\Doctrine\ORM\Repository\JobExecutionRepository;
+use Akeneo\Platform\Bundle\DashboardBundle\Widget\WidgetInterface;
+use Akeneo\Platform\Bundle\ImportExportBundle\Repository\InternalApi\JobExecutionRepository;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
