@@ -10,7 +10,7 @@ Made with :blue_heart: by C&M
 
 | **Bundle version**  | **Akeneo version** |
 | ------------- | ------------- |
-| v1.1.*  | v3.1.*  |
+| v1.1.*  | v3.1.* / v3.2.*  |
 | v1.0.*  | v2.3.*  |
 
 ## Requirements
