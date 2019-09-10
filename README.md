@@ -40,9 +40,9 @@ in the `app/AppKernel.php` file of your project:
 // ...
 class AppKernel extends Kernel
 {
-    public function registerBundles()
+    public function registerProjectBundles()
     {
-        $bundles = [
+        return [
             // ...
             new ClickAndMortar\AkeneoMigrationsManagerBundle\ClickAndMortarAkeneoMigrationsManagerBundle(),
         ];
